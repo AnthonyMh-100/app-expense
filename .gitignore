@@ -52,4 +52,3 @@ next-env.d.ts
 # local design notes
 /diseno-panel.txt
 
-/app/generated/prisma
