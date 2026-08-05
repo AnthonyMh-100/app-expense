@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local postgres data (Docker volume)
+/postgres/
+
+# ai tooling & workspace config
+.agents/
+.claude/
+.windsurf/
+/skills-lock.json
+
+# local design notes
+/diseno-panel.txt
+
+/app/generated/prisma

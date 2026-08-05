@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PAY_METHOD {
+  CASH
+  TRANSFER
+  CARD
+}
+
+enum STATUS_MOVEMENT {
+  PAID
+  UNPAID
+  PARTIAL
+}
+
+enum TYPE_MOVEMENT {
+  INCOME
+  EXPENSE
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customers Customer[]
+  movements Movement[]
+  payments  Payment[]
+  sessions  Session[]
+
+  @@map("company")
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  companyId Int
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  lastName  String?
+  phone     String?  @unique
+  email     String?  @unique
+  address   String?
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  companyId Int
+
+  movements Movement[]
+
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@map("customers")
+}
+
+model Movement {
+  id           Int             @id @default(autoincrement())
+  concept      String
+  customerId   Int
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  amount       Decimal         @db.Decimal(10, 2)
+  payMethod    PAY_METHOD      @default(CASH)
+  typeMovement TYPE_MOVEMENT   @default(INCOME)
+  status       STATUS_MOVEMENT @default(UNPAID)
+  observation  String?
+  companyId    Int
+
+  company   Company  @relation(fields: [companyId], references: [id])
+  customers Customer @relation(fields: [customerId], references: [id])
+
+  payments Payment[]
+
+  @@map("movements")
+}
+
+model Payment {
+  id          Int        @id @default(autoincrement())
+  amount      Decimal    @db.Decimal(10, 2)
+  payMethod   PAY_METHOD @default(CASH)
+  paymentDate DateTime   @default(now())
+  note        String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  movementId  Int
+  companyId   Int
+
+  movement Movement @relation(fields: [movementId], references: [id])
+  company  Company  @relation(fields: [companyId], references: [id])
+
+  @@map("payments")
+}

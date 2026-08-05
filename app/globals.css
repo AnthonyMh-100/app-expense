@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f7fb;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-muted: #eef3f8;
+  --border: #d8e2ee;
+  --ink: #183b66;
+  --paper: #fbfdff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Space Grotesk", "Inter", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+    monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    135deg,
+    #4f46e5 0%,
+    #6d6df0 52%,
+    #2563eb 100%
+  );
+}
+
+@utility text-brand-gradient {
+  background-image: linear-gradient(90deg, #4f46e5, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-sidebar-gradient {
+  background-image: linear-gradient(180deg, #0b1120 0%, #101a30 55%, #0a0f1c 100%);
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
+  min-height: 100%;
+  background:
+    radial-gradient(44rem 26rem at 10% -6%, rgb(99 102 241 / 0.16), transparent 55%),
+    radial-gradient(38rem 22rem at 94% 2%, rgb(236 72 153 / 0.12), transparent 55%),
+    radial-gradient(42rem 28rem at 50% 112%, rgb(20 184 166 / 0.14), transparent 55%),
+    linear-gradient(180deg, #f8faff 0%, #eef2fb 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(15 23 42 / 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(15 23 42 / 0.012) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgb(0 0 0 / 0.55), transparent 86%);
+}
+
+::selection {
+  background: rgb(30 64 175 / 0.14);
+  color: var(--foreground);
 }
