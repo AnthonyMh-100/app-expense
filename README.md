@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Caja Diaria de Imprenta
 
-## Getting Started
+Sistema web de **gestión de caja diaria** para un negocio de impresión. Registra ingresos y gastos por cliente, controla los saldos pendientes mediante abonos y ofrece un panel con el resumen del turno. Proyecto de portafolio desarrollado con **Next.js 16**, **React 19**, **Prisma 7** y **PostgreSQL**.
 
-First, run the development server:
+## Funcionalidades
+
+- **Autenticación por negocio**: registro e inicio de sesión con sesiones seguras (bcrypt + cookie firmada). Cada negocio ve solo su propia información.
+- **Panel de resumen**: métricas de ganancia neta, ingresos, gastos y saldo pendiente, con filtro por rango de fechas.
+- **Movimientos**: registro de ingresos y gastos asociados a un cliente, con método de pago (efectivo, tarjeta, transferencia), observación y estados de cobro (pagado, parcial, pendiente).
+- **Clientes**: registro, búsqueda y administración de clientes por negocio.
+- **Cobros pendientes**: control de saldos abiertos, registro de abonos y filtros por antigüedad (hoy / antiguos).
+- **Diseño**: interfaz clara con acentos de marca (índigo/azul), sidebar oscuro fintech y alertas con SweetAlert2.
+
+## Stack
+
+- **Frontend/Backend**: Next.js 16 (App Router, React Server Components, Server Actions)
+- **ORM**: Prisma 7 con driver adapter para PostgreSQL
+- **Base de datos**: PostgreSQL (Docker)
+- **Estilos**: Tailwind CSS 4, iconos react-icons
+- **Extras**: bcryptjs (hash de contraseñas), SweetAlert2, Moment (fechas)
+
+## Requisitos previos
+
+- Node.js 20+
+- PostgreSQL corriendo (local o contenedor)
+
+## Puesta en marcha
 
 ```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Configurar variables de entorno (.env)
+#    DATABASE_URL=postgresql://usuario:pass@localhost:5432/expense_db
+
+# 3. Aplicar migraciones
+npx prisma migrate dev
+
+# 4. (Opcional) Sembrar una empresa de ejemplo
+npx prisma db seed
+
+# 5. Levantar el servidor de desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando          | Descripción                          |
+| ---------------- | ------------------------------------ |
+| `npm run dev`    | Servidor de desarrollo               |
+| `npm run build`  | Build de producción                  |
+| `npm run start`  | Servir el build de producción        |
+| `npm run lint`   | Lint con ESLint                      |
 
-## Learn More
+## Estructura principal
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/(main)/          Páginas protegidas (dashboard, movimientos, clientes, cobros)
+app/login/           Autenticación del negocio
+actions/             Server Actions (auth, dashboard, movimientos, pagos, clientes)
+components/          UI reutilizable y específica por módulo
+lib/                 Prisma client y utilidades de sesión
+prisma/              Esquema y migraciones
+```
